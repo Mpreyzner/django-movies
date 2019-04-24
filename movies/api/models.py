@@ -13,7 +13,7 @@ class Movie(models.Model):
     country = models.CharField(max_length=64)
 
     slug = models.SlugField(max_length=32, default='', blank=True)
-    parent = models.ForeignKey('self', blank=True, null=True)
+    parent = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -32,7 +32,7 @@ class Movie(models.Model):
 class Comment(models.Model):
     author = models.CharField(max_length=64)
     content = models.TextField()
-    movie = models.ForeignKey(Movie)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
