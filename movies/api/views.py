@@ -35,7 +35,8 @@ class CommentAPIListView(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        # 1. ​Request body should contain ID of movie already present in database, and comment text body.
+        if not Movie.objects.filter(movie=request.GET['movie_id']).exists():
+            return Response("Movie with id %s does not exist" % request.GET['movie_id'], status=404)
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
