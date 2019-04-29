@@ -9,6 +9,6 @@ from . import views
 urlpatterns = [
     url(r'^movies/$', views.MovieAPIListView.as_view()),
     url(r'^comments/$', views.CommentAPIListView.as_view()),
-    url(r'^top/$', views.CommentAPIListView.as_view()),
+    url(r'^top/$', views.TopAPIListView.as_view()),
 
 ]
