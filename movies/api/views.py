@@ -10,7 +10,13 @@ import datetime
 
 
 class MovieAPIListView(APIView):
+    """
+    get:
+    Return a list of all the existing movies
 
+    post:
+    Add new movie by title, fetching data from omdbapi
+    """
     def get(self, request, format=None):
         # @TODO add some additional filtering and sorting, maybe by year or something
         items = Movie.objects.all()
@@ -37,7 +43,7 @@ class MovieAPIListView(APIView):
         api_url = 'http://www.omdbapi.com/'
         response = requests.get(api_url, {'apikey': api_key, 't': title})
         response.raise_for_status()
-        # catch 404 and return response
+        # @TODO catch 404 and return response
         data = json.loads(response.content)
         data = {k.lower(): v for k, v in data.items()}
         keys = ('title', 'director', 'writer', 'language', 'country')
@@ -47,6 +53,13 @@ class MovieAPIListView(APIView):
 
 class CommentAPIListView(APIView):
 
+    """
+    get:
+    Return all comments, can be filtered by movie id when movie_id is provided in query
+
+    post:
+    Add new comment to a movie
+    """
     def get(self, request, format=None):
         # @TODO remove author from comments and create migration
         if 'movie_id' in request.GET:
@@ -67,7 +80,10 @@ class CommentAPIListView(APIView):
 
 
 class TopAPIListView(APIView):
-
+    """
+    get:
+    Return movie statistics with movie_id, number of comments and rank (higher rank means more comments)
+    """
     def get(self, request, format=None):
         if 'from' in request.GET and 'to' in request.GET:
             date_from = self.get_date(request.GET['from'])
