@@ -30,7 +30,6 @@ class Movie(models.Model):
 
 
 class Comment(models.Model):
-    author = models.CharField(max_length=64)
     content = models.TextField()
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 

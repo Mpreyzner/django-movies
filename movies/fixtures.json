@@ -42,7 +42,6 @@
     "fields": {
       "updated": "2015-04-13T17:52:38.404Z",
       "movie": "013350f4-8758-453c-a956-04284dd18173",
-      "author": "yo mamma",
       "created": "2015-04-13T17:52:38.404Z",
       "content": "hello is it me your looking for"
     },
@@ -53,7 +52,6 @@
     "fields": {
       "updated": "2015-04-13T17:52:38.404Z",
       "movie": "013350f4-8758-453c-a956-04284dd18173",
-      "author": "yo mamma",
       "created": "2015-04-13T17:52:38.404Z",
       "content": "2nd comment"
     },
@@ -64,7 +62,6 @@
     "fields": {
       "updated": "2015-04-13T17:52:38.404Z",
       "movie": "013350f4-8758-453c-a956-04284dd18173",
-      "author": "yo mamma",
       "created": "2015-04-13T17:52:38.404Z",
       "content": "3rd comment"
     },
@@ -75,7 +72,6 @@
     "fields": {
       "updated": "2015-04-13T17:52:38.404Z",
       "movie": "f2c8be62-f8a0-4297-963f-4f72726e9b2f",
-      "author": "yo mamma",
       "created": "2015-04-13T17:52:38.404Z",
       "content": "only one comment"
     },

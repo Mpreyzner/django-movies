@@ -61,7 +61,6 @@ class CommentAPIListView(APIView):
     Add new comment to a movie
     """
     def get(self, request, format=None):
-        # @TODO remove author from comments and create migration
         if 'movie_id' in request.GET:
             items = Comment.objects.filter(movie=request.GET['movie_id'])
         else:
