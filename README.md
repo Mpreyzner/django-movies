@@ -1,5 +1,25 @@
 # Movies app
 
+## Launching application
+- Create and activate venv
+```bash
+virtualenv -p python3 venv
+source venv/bin/activate
+```
+- Install dependencies
+```bash
+pip install -r requirements.txt 
+```
+- Run server
+```bash
+python manage.py runserver
+```
+
+
+## Running tests
+```bash
+pytest
+```
 
 ## API requirements
 
@@ -28,3 +48,8 @@ Should return movie ranking for given time range (required).
 Movie ranking should be based on number of comments for given time period.
 Movies with the same number of comments should have the same position in ranking.
 Should return: movie id, rank position and total number of comments (for specified date range).
+
+
+```bash
+curl 'http://127.0.0.1:8000/api/movies/' -H 'Content-Type: application/json' --data '{"title": "21 grams"}'
+```
