@@ -1,32 +1,54 @@
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import MovieSerializer, CommentSerializer
 from .models import Movie, Comment
+import requests
+import os
+import json
+from django.db.models import Count
+import datetime
 
 
 class MovieAPIListView(APIView):
 
     def get(self, request, format=None):
-        # 2. Additional filtering, sorting is fully optional - but some implementation is a bonus (pagination, filter by year etc)
+        # @TODO add some additional filtering and sorting, maybe by year or something
         items = Movie.objects.all()
         serializer = MovieSerializer(items, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        # 1. ​Request body should contain only movie title, and its presence should be validated.
-        # 2. Based on passed title, other movie details should be fetched from http://www.omdbapi.com/ (or other similar, public movie database) - and saved to application database.
-        # 3. Request response should include full movie object, along with all data fetched from external API.
-        serializer = MovieSerializer(data=request.data)
+        if 'title' not in request.data:
+            return Response("Movie title missing", status=400)
+        title = request.data['title']
+
+        if Movie.objects.filter(title=request.GET['title']).exists():
+            serializer = CommentSerializer(Movie.objects.filter(title=request.GET['title']))
+            return Response(serializer.data, status=200)
+
+        serializer = MovieSerializer(data=self.get_movie_data(title))
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
+    def get_movie_data(self, title):
+        api_key = os.environ.get('API_KEY')
+        api_url = 'http://www.omdbapi.com/'
+        response = requests.get(api_url, {'apikey': api_key, 't': title})
+        response.raise_for_status()
+        # catch 404 and return response
+        data = json.loads(response.content)
+        data = {k.lower(): v for k, v in data.items()}
+        keys = ('title', 'director', 'writer', 'language', 'country')
+        filtered = dict(zip(keys, [data[k] for k in keys]))
+        return filtered
+
 
 class CommentAPIListView(APIView):
 
     def get(self, request, format=None):
+        # @TODO remove author from comments and create migration
         if 'movie_id' in request.GET:
             items = Comment.objects.filter(movie=request.GET['movie_id'])
         else:
@@ -36,7 +58,7 @@ class CommentAPIListView(APIView):
 
     def post(self, request, format=None):
         if not Movie.objects.filter(movie=request.GET['movie_id']).exists():
-            return Response("Movie with id %s does not exist" % request.GET['movie_id'], status=404)
+            return Response("Movie with id %s does not exist" % request.GET['movie_id'], status=400)
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -47,18 +69,29 @@ class CommentAPIListView(APIView):
 class TopAPIListView(APIView):
 
     def get(self, request, format=None):
-        # 1.  ​Should return top movies already present in the database ranking based on a number of comments added to the movie (as in the example) in the *specified date range*.
-        # The response should include the ID of the movie, position in rank and total number of comments (in the specified date range).
-        # 2. Movies with the same number of comments should have the same position in the ranking.
-        # 3. Should require specifying a date range for which statistics should be generated.
+        if 'from' in request.GET and 'to' in request.GET:
+            date_from = self.get_date(request.GET['from'])
+            date_to = self.get_date(request.GET['to'])
+        else:
+            return Response("Date range for calculating stats required, expected 'from' and 'to'", status=400)
 
-        # add date range from and to ->? required
-        # find comments from given date range
-        # calculate which movies has most comments
-        # return statistics
+        movies = Movie.objects.select_related() \
+            .filter(created__range=[date_from, date_to]) \
+            .annotate(comments_count=Count('comment')).order_by('comments_count')
 
-        items = Comment.objects.all()
-        paginator = PageNumberPagination()
-        result_page = paginator.paginate_queryset(items, request)
-        serializer = CommentSerializer(result_page, many=True)
-        return paginator.get_paginated_response(serializer.data)
+        max_comments = movies.last().comments_count
+
+        stats = []
+        for movie in movies:
+            if movie.comments_count:
+                rank = movie.comments_count - max_comments + 1
+            else:
+                rank = 0
+            stats.append({'rank': rank, 'comments': movie.comments_count, 'id': movie.id})
+        return Response(stats)
+
+    def get_date(self, date_text):
+        try:
+            return datetime.datetime.strptime(date_text, '%d-%m-%Y')
+        except ValueError:
+            raise ValueError("Incorrect data format, should be DD-MM-YYYY")
