@@ -27,7 +27,7 @@
   },
   {
     "fields": {
-      "title": "Monty Python and the Holy Grail II",
+      "title": "Monty Python and the Holy Grail III",
       "director": "Terry Gilliam, Terry Jones",
       "writer": "Graham Chapman, John Cleese, Eric Idle, Terry Gilliam, Terry Jones, Michael Palin",
       "language": "English, French, Latin",
@@ -44,7 +44,40 @@
       "movie": "013350f4-8758-453c-a956-04284dd18173",
       "author": "yo mamma",
       "created": "2015-04-13T17:52:38.404Z",
-      "content": "Django is pretty neat, eh."
+      "content": "hello is it me your looking for"
+    },
+    "model": "api.comment",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "updated": "2015-04-13T17:52:38.404Z",
+      "movie": "013350f4-8758-453c-a956-04284dd18173",
+      "author": "yo mamma",
+      "created": "2015-04-13T17:52:38.404Z",
+      "content": "2nd comment"
+    },
+    "model": "api.comment",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "updated": "2015-04-13T17:52:38.404Z",
+      "movie": "013350f4-8758-453c-a956-04284dd18173",
+      "author": "yo mamma",
+      "created": "2015-04-13T17:52:38.404Z",
+      "content": "3rd comment"
+    },
+    "model": "api.comment",
+    "pk": 1
+  },
+    {
+    "fields": {
+      "updated": "2015-04-13T17:52:38.404Z",
+      "movie": "f2c8be62-f8a0-4297-963f-4f72726e9b2f",
+      "author": "yo mamma",
+      "created": "2015-04-13T17:52:38.404Z",
+      "content": "only one comment"
     },
     "model": "api.comment",
     "pk": 1
