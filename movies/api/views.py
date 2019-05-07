@@ -28,8 +28,11 @@ class MovieAPIListView(APIView):
             return Response("Movie title missing", status=400)
         title = request.data['title']
 
-        if Movie.objects.filter(title=request.GET['title']).exists():
-            serializer = CommentSerializer(Movie.objects.filter(title=request.GET['title']))
+        if Movie.objects.filter(title=request.data['title']).exists():
+            movie = Movie.objects.filter(title=request.data['title'])
+            serializer = MovieSerializer(instance=movie, many=True)
+            # TODO fix this so there won't be many
+            # what about movies with the same title?
             return Response(serializer.data, status=200)
 
         serializer = MovieSerializer(data=self.get_movie_data(title))
@@ -69,8 +72,8 @@ class CommentAPIListView(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        if not Movie.objects.filter(movie=request.GET['movie_id']).exists():
-            return Response("Movie with id %s does not exist" % request.GET['movie_id'], status=400)
+        if not Movie.objects.filter(id=request.data['movie']).exists():
+            return Response("Movie with id %s does not exist" % request.data['movie'], status=404)
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
