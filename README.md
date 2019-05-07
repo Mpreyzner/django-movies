@@ -10,6 +10,15 @@ source venv/bin/activate
 ```bash
 pip install -r requirements.txt 
 ```
+- Run migrations
+```bash
+python manage.py migrate
+```
+- Load fixtures
+```bash
+ python manage.py loaddata fixtures.json
+```
+
 - Run server
 ```bash
 python manage.py runserver
