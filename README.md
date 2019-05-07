@@ -1,5 +1,10 @@
 # Movies app
 
+App that allows you to:
+- add movies by title and the rest of the information is fetched from the http://www.omdbapi.com/
+- add comments to movies that are already added
+- view movies ranks (based on number of comments)
+
 ## Launching application
 - Create and activate venv
 ```bash
